@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAGALAND — Plan de projet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#0F1220;
+  --surface:#171B2C;
+  --surface-2:#1F2438;
+  --surface-3:#252B42;
+  --border:#2A2F45;
+  --gold:#F2B441;
+  --gold-dim:#B98A2E;
+  --red:#DA3B33;
+  --orange:#E2652F;
+  --teal:#2FA89A;
+  --violet:#8B6FE0;
+  --slate:#5B6178;
+  --sun:#FFD24C;
+  --text:#F5EFE0;
+  --text-muted:#9CA0B8;
+  --text-dim:#6C7191;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--void);
+  color:var(--text);
+  font-family:'IBM Plex Sans',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--gold);color:var(--void);}
+
+.mono{font-family:'IBM Plex Mono',monospace;}
+
+/* ---------- Texture backdrop ---------- */
+body{
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(242,180,65,0.10), transparent 40%),
+    radial-gradient(circle at 88% 0%, rgba(139,111,224,0.12), transparent 45%),
+    radial-gradient(circle at 50% 100%, rgba(47,168,154,0.08), transparent 50%);
+  background-attachment:fixed;
+}
+
+/* ---------- Hero ---------- */
+.hero{
+  padding:64px 6vw 40px;
+  border-bottom:1px solid var(--border);
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image: repeating-linear-gradient(115deg, rgba(245,239,224,0.035) 0px, rgba(245,239,224,0.035) 1px, transparent 1px, transparent 68px);
+  pointer-events:none;
+}
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  letter-spacing:0.28em;
+  text-transform:uppercase;
+  font-size:12px;
+  color:var(--gold);
+  margin:0 0 18px;
+  display:flex; align-items:center; gap:10px;
+}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--gold);display:inline-block;}
+h1.wordmark{
+  font-family:'Anton',sans-serif;
+  font-weight:400;
+  font-size:clamp(52px, 11vw, 132px);
+  line-height:0.86;
+  margin:0;
+  letter-spacing:0.01em;
+  background:linear-gradient(180deg, var(--sun) 0%, var(--gold) 55%, var(--gold-dim) 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  text-shadow:0 2px 40px rgba(242,180,65,0.18);
+}
+.hero-sub{
+  max-width:640px;
+  margin:18px 0 0;
+  font-size:16.5px;
+  line-height:1.6;
+  color:var(--text-muted);
+}
+.hero-sub b{color:var(--text);font-weight:600;}
+
+.stat-strip{
+  display:grid;
+  grid-template-columns:repeat(6, minmax(0,1fr));
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+  margin-top:40px;
+  border-radius:10px;
+  overflow:hidden;
+}
+.stat{
+  background:var(--surface);
+  padding:18px 16px;
+  position:relative;
+}
+.stat .n{
+  font-family:'Anton',sans-serif;
+  font-size:30px;
+  color:var(--text);
+  display:block;
+  line-height:1;
+}
+.stat .l{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:0.09em;
+  color:var(--text-dim);
+  margin-top:8px;
+  display:block;
+}
+.stat.accent-red .n{color:var(--red);}
+.stat.accent-gold .n{color:var(--gold);}
+.stat.accent-teal .n{color:var(--teal);}
+
+/* ---------- Tabs ---------- */
+.tabbar-wrap{
+  position:sticky; top:0; z-index:50;
+  background:rgba(15,18,32,0.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+.tabbar{
+  display:flex;
+  gap:2px;
+  padding:0 6vw;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{
+  appearance:none; border:none; cursor:pointer;
+  background:transparent;
+  color:var(--text-dim);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12.5px;
+  letter-spacing:0.05em;
+  padding:16px 18px 14px;
+  white-space:nowrap;
+  border-bottom:2px solid transparent;
+  transition:color .15s ease, border-color .15s ease;
+}
+.tab span.num{opacity:0.55;margin-right:8px;}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* ---------- Main layout ---------- */
+main{padding:48px 6vw 100px;max-width:1400px;margin:0 auto;}
+.panel{display:none;animation:fade .25s ease;}
+.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+.section-head{
+  display:flex; align-items:baseline; justify-content:space-between;
+  gap:16px; flex-wrap:wrap;
+  margin-bottom:24px;
+}
+.section-head h2{
+  font-family:'Anton',sans-serif;
+  font-weight:400;
+  font-size:28px;
+  margin:0;
+  letter-spacing:0.01em;
+}
+.section-head p{color:var(--text-dim);font-size:13.5px;margin:4px 0 0;}
+
+/* ---------- Timeline (signature element) ---------- */
+.timeline-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:28px 28px 22px;
+  margin-bottom:36px;
+}
+.timeline-card h3{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:0.14em;
+  color:var(--text-dim);
+  margin:0 0 22px;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.timeline-track{
+  position:relative;
+  height:54px;
+  border-radius:8px;
+  overflow:hidden;
+  display:flex;
+  background:var(--void);
+}
+.timeline-seg{
+  position:relative;
+  height:100%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10.5px;
+  color:var(--void);
+  font-weight:600;
+  white-space:nowrap;
+  overflow:hidden;
+  cursor:default;
+  border-right:2px solid var(--void);
+  transition:filter .15s ease;
+}
+.timeline-seg:last-child{border-right:none;}
+.timeline-seg:hover{filter:brightness(1.15);}
+.timeline-seg span{padding:0 8px;overflow:hidden;text-overflow:ellipsis;}
+.timeline-ticks{position:relative;height:22px;margin-top:6px;}
+.tick{
+  position:absolute; top:0;
+  width:2px; height:9px;
+  background:var(--red);
+}
+.tick::after{
+  content:"";
+  position:absolute; top:9px; left:50%;
+  width:5px;height:5px;border-radius:50%;
+  background:var(--red);
+  transform:translateX(-50%);
+}
+.timeline-axis{display:flex;justify-content:space-between;margin-top:2px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-dim);}
+.timeline-legend{display:flex;gap:6px;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--text-dim);}
+.timeline-legend .dot{width:7px;height:7px;border-radius:50%;background:var(--red);display:inline-block;margin-right:4px;}
+
+/* ---------- Cards / grids ---------- */
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+  transition:border-color .15s ease, transform .15s ease;
+}
+.card:hover{border-color:var(--surface-3);}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px;}
+.card h4{margin:0;font-size:15px;font-weight:600;line-height:1.35;}
+.badge{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.04em;
+  padding:3px 9px;
+  border-radius:20px;
+  white-space:nowrap;
+  border:1px solid transparent;
+  text-transform:uppercase;
+}
+.badge-dot::before{content:"●";margin-right:5px;font-size:8px;vertical-align:1px;}
+
+.card .meta{display:flex;flex-wrap:wrap;gap:6px 14px;margin:12px 0;font-size:12px;color:var(--text-muted);}
+.card .meta b{color:var(--text);font-weight:600;}
+.card p.desc{font-size:13px;color:var(--text-muted);line-height:1.55;margin:10px 0 0;}
+
+/* ---------- Filter chips ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;}
+.chip{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11.5px;
+  padding:7px 13px;
+  border-radius:20px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text-muted);
+  cursor:pointer;
+  user-select:none;
+  transition:all .12s ease;
+}
+.chip:hover{border-color:var(--gold-dim);color:var(--text);}
+.chip.active{background:var(--gold);border-color:var(--gold);color:var(--void);font-weight:600;}
+
+.search-row{display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap;}
+.search-box{
+  flex:1;min-width:220px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:10px 14px;
+  color:var(--text);
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:13.5px;
+}
+.search-box:focus{outline:none;border-color:var(--gold-dim);}
+.search-box::placeholder{color:var(--text-dim);}
+
+/* ---------- Tables ---------- */
+.table-wrap{
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:auto;
+  background:var(--surface);
+  -webkit-overflow-scrolling:touch;
+}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{
+  text-align:left;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10.5px;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  color:var(--text-dim);
+  padding:13px 16px;
+  background:var(--surface-2);
+  border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+tbody td{
+  padding:12px 16px;
+  border-bottom:1px solid var(--border);
+  color:var(--text-muted);
+  vertical-align:top;
+}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:var(--surface-2);}
+td.strong{color:var(--text);font-weight:600;}
+td.id-col{font-family:'IBM Plex Mono',monospace;color:var(--text-dim);font-size:12px;}
+.phase-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11.5px;color:var(--text);
+  white-space:nowrap;
+}
+.phase-tag .sw{width:8px;height:8px;border-radius:2px;display:inline-block;}
+.crit-yes{color:var(--red);font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:11px;}
+.crit-no{color:var(--text-dim);font-family:'IBM Plex Mono',monospace;font-size:11px;}
+
+/* ---------- Risk matrix ---------- */
+.matrix-wrap{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:28px;
+  margin-bottom:32px;
+  overflow-x:auto;
+}
+.matrix-grid{
+  display:grid;
+  grid-template-columns:70px repeat(5,1fr);
+  grid-template-rows:auto repeat(5,68px);
+  gap:4px;
+  min-width:620px;
+}
+.mx-corner{}
+.mx-axis-label{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  color:var(--text-dim);
+  display:flex;align-items:center;justify-content:center;
+  text-transform:uppercase;letter-spacing:0.06em;
+}
+.mx-y-label{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;color:var(--text-dim);
+  display:flex;align-items:center;justify-content:flex-end;
+  padding-right:10px;
+}
+.mx-cell{
+  border-radius:8px;
+  padding:6px;
+  display:flex;flex-wrap:wrap;align-content:flex-start;gap:4px;
+  background:var(--void);
+  border:1px solid var(--border);
+}
+.mx-chip{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10.5px;
+  font-weight:600;
+  padding:3px 6px;
+  border-radius:5px;
+  color:var(--void);
+  cursor:default;
+}
+
+/* ---------- Footer ---------- */
+footer{
+  padding:30px 6vw 50px;
+  border-top:1px solid var(--border);
+  color:var(--text-dim);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11.5px;
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
+}
+
+@media (max-width:720px){
+  .stat-strip{grid-template-columns:repeat(2,1fr);}
+  .hero{padding:44px 5vw 30px;}
+  main{padding:36px 5vw 80px;}
+  .matrix-grid{grid-template-columns:56px repeat(5,90px);}
+  .grid-cards{grid-template-columns:1fr;}
+  .tab{padding:14px 14px 12px;font-size:12px;}
+  .timeline-seg span{padding:0 4px;font-size:9px;}
+}
+
+/* Mobile: tables become stacked cards instead of squeezed columns */
+@media (max-width:640px){
+  table thead{
+    position:absolute; width:1px; height:1px;
+    overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap;
+  }
+  table, tbody, tr, td{display:block; width:100%;}
+  tbody tr{
+    border-bottom:1px solid var(--border);
+    padding:14px 16px;
+  }
+  tbody tr:hover{background:none;}
+  tbody td{
+    border:none; padding:6px 0;
+    display:flex; justify-content:space-between; align-items:flex-start;
+    gap:14px; text-align:right;
+  }
+  tbody td::before{
+    content:attr(data-label);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px; text-transform:uppercase; letter-spacing:0.05em;
+    color:var(--text-dim);
+    text-align:left; flex-shrink:0; padding-top:2px;
+  }
+  tbody td.strong{flex-direction:column; align-items:flex-start; text-align:left; gap:4px;}
+  tbody td.strong::before{padding-top:0;}
+}
+
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <p class="eyebrow">Document de planification senior · 20 000+ participants</p>
+  <h1 class="wordmark">WAGALAND</h1>
+  <p class="hero-sub">Plan de projet du festival — <b>56 semaines</b> (~13 mois) jusqu'au Jour&nbsp;J, réparties en <b>7 phases</b>. Les semaines (S1, S2…) sont relatives au lancement officiel du projet, à recaler sur un calendrier réel dès que la date de l'événement est fixée.</p>
+  <div class="stat-strip" id="statStrip"></div>
+</header>
+
+<div class="tabbar-wrap">
+  <nav class="tabbar" id="tabbar"></nav>
+</div>
+
+<main id="main"></main>
+
+<footer>
+  <span>WAGALAND — Plan de projet · généré depuis le classeur source</span>
+  <span id="genMeta"></span>
+</footer>
+
+<script id="wagaland-data" type="application/json">{"wbs": [{"ID": "0", "Phase": "Cadrage", "Tâche": "Lancement officiel du projet", "Description": "Décision de lancer Wagaland, nomination d'un porteur de projet", "Durée (sem.)": 1, "Début (S)": 1, "Fin (S)": 1, "Dépendances": "-", "Responsable": "Fondateur", "Chemin critique": "Non"}, {"ID": "1.1", "Phase": "1. Fondations", "Tâche": "Structure juridique", "Description": "Créer l'entité porteuse (association ou société) et ouvrir un compte dédié", "Durée (sem.)": 3, "Début (S)": 1, "Fin (S)": 3, "Dépendances": "0", "Responsable": "Fondateur / Juridique", "Chemin critique": "Non"}, {"ID": "1.2", "Phase": "1. Fondations", "Tâche": "Business plan & budget prévisionnel", "Description": "Modèle économique, hypothèses de revenus/dépenses, seuil de rentabilité", "Durée (sem.)": 6, "Début (S)": 1, "Fin (S)": 6, "Dépendances": "0", "Responsable": "Direction / Finance", "Chemin critique": "Oui"}, {"ID": "1.3", "Phase": "1. Fondations", "Tâche": "Étude de marché & positionnement", "Description": "Analyse de la demande, benchmark d'autres festivals régionaux", "Durée (sem.)": 4, "Début (S)": 2, "Fin (S)": 5, "Dépendances": "0", "Responsable": "Marketing", "Chemin critique": "Non"}, {"ID": "1.4", "Phase": "1. Fondations", "Tâche": "Identité de marque", "Description": "Nom, logo, charte graphique, ton de marque Wagaland", "Durée (sem.)": 4, "Début (S)": 4, "Fin (S)": 7, "Dépendances": "1.3", "Responsable": "Marketing / Créa", "Chemin critique": "Non"}, {"ID": "1.5", "Phase": "1. Fondations", "Tâche": "Recrutement équipe de direction", "Description": "DG, Directeur Artistique, Directeur Production", "Durée (sem.)": 6, "Début (S)": 3, "Fin (S)": 8, "Dépendances": "1.1", "Responsable": "Fondateur", "Chemin critique": "Non"}, {"ID": "2.1", "Phase": "2. Ancrage", "Tâche": "Recherche & présélection de sites", "Description": "Identifier 3-5 sites capables d'accueillir 15 000-25 000 personnes", "Durée (sem.)": 4, "Début (S)": 8, "Fin (S)": 12, "Dépendances": "1.2", "Responsable": "Production", "Chemin critique": "Oui"}, {"ID": "2.2", "Phase": "2. Ancrage", "Tâche": "Visites de sites & négociation", "Description": "Visites techniques, négociation des conditions", "Durée (sem.)": 4, "Début (S)": 12, "Fin (S)": 16, "Dépendances": "2.1", "Responsable": "Production", "Chemin critique": "Oui"}, {"ID": "2.3", "Phase": "2. Ancrage", "Tâche": "Signature contrat de location du site", "Description": "Contrat final, accès, dates réservées", "Durée (sem.)": 2, "Début (S)": 16, "Fin (S)": 18, "Dépendances": "2.2", "Responsable": "Direction / Juridique", "Chemin critique": "Oui"}, {"ID": "2.4", "Phase": "2. Ancrage", "Tâche": "Autorisations administratives", "Description": "Dépôt des dossiers : préfecture, mairie, sécurité civile, droits d'auteur", "Durée (sem.)": 7, "Début (S)": 17, "Fin (S)": 24, "Dépendances": "2.3", "Responsable": "Juridique", "Chemin critique": "Oui"}, {"ID": "2.5", "Phase": "2. Ancrage", "Tâche": "Dossier de présentation sponsors", "Description": "Pitch deck, offres de partenariat par palier", "Durée (sem.)": 3, "Début (S)": 12, "Fin (S)": 15, "Dépendances": "1.4", "Responsable": "Marketing / Partenariats", "Chemin critique": "Non"}, {"ID": "2.6", "Phase": "2. Ancrage", "Tâche": "Prospection sponsors de conviction", "Description": "Premiers sponsors qui embarquent tôt", "Durée (sem.)": 9, "Début (S)": 15, "Fin (S)": 24, "Dépendances": "2.5", "Responsable": "Partenariats", "Chemin critique": "Non"}, {"ID": "3.1", "Phase": "3. Structuration", "Tâche": "Recrutement responsables de pôles", "Description": "Sécurité, technique, logistique, com, bénévoles", "Durée (sem.)": 4, "Début (S)": 24, "Fin (S)": 28, "Dépendances": "1.5", "Responsable": "RH", "Chemin critique": "Non"}, {"ID": "3.2", "Phase": "3. Structuration", "Tâche": "Contrats prestataires clés", "Description": "Scène, son, lumière, structures, sécurité privée, secours", "Durée (sem.)": 7, "Début (S)": 25, "Fin (S)": 32, "Dépendances": "2.3", "Responsable": "Production", "Chemin critique": "Non"}, {"ID": "3.3", "Phase": "3. Structuration", "Tâche": "Signature sponsors principaux", "Description": "Contractualisation des sponsors majeurs", "Durée (sem.)": 10, "Début (S)": 24, "Fin (S)": 34, "Dépendances": "2.6", "Responsable": "Direction / Partenariats", "Chemin critique": "Oui"}, {"ID": "3.4", "Phase": "3. Structuration", "Tâche": "Booking programmation artistique", "Description": "Têtes d'affiche, artistes burkinabè et africains, DJ", "Durée (sem.)": 10, "Début (S)": 24, "Fin (S)": 34, "Dépendances": "2.4", "Responsable": "Direction artistique", "Chemin critique": "Oui"}, {"ID": "3.5", "Phase": "3. Structuration", "Tâche": "Ouverture billetterie early bird", "Description": "Mise en ligne billetterie professionnelle, tarifs de lancement", "Durée (sem.)": 2, "Début (S)": 32, "Fin (S)": 34, "Dépendances": "1.4", "Responsable": "Marketing / Billetterie", "Chemin critique": "Non"}, {"ID": "3.6", "Phase": "3. Structuration", "Tâche": "Plan de sécurité & gestion des risques", "Description": "Dispositif de secours, plan d'évacuation, PC sécurité", "Durée (sem.)": 8, "Début (S)": 26, "Fin (S)": 34, "Dépendances": "2.4", "Responsable": "Sécurité", "Chemin critique": "Non"}, {"ID": "4.1", "Phase": "4. Exécution", "Tâche": "Finalisation programmation & contrats artistes", "Description": "Signature de tous les contrats, riders techniques", "Durée (sem.)": 6, "Début (S)": 34, "Fin (S)": 40, "Dépendances": "3.4", "Responsable": "Direction artistique", "Chemin critique": "Oui"}, {"ID": "4.2", "Phase": "4. Exécution", "Tâche": "Campagne marketing intensive", "Description": "Digital, radio, TV, affichage, influenceurs", "Durée (sem.)": 16, "Début (S)": 36, "Fin (S)": 52, "Dépendances": "3.5", "Responsable": "Marketing", "Chemin critique": "Oui"}, {"ID": "4.3", "Phase": "4. Exécution", "Tâche": "Plan de site détaillé", "Description": "Accès, flux, implantation scènes/stands, zones secours", "Durée (sem.)": 6, "Début (S)": 38, "Fin (S)": 44, "Dépendances": "3.2", "Responsable": "Production", "Chemin critique": "Non"}, {"ID": "4.4", "Phase": "4. Exécution", "Tâche": "Recrutement & formation bénévoles", "Description": "Centaines de bénévoles, briefings par pôle", "Durée (sem.)": 8, "Début (S)": 40, "Fin (S)": 48, "Dépendances": "3.1", "Responsable": "RH", "Chemin critique": "Non"}, {"ID": "4.5", "Phase": "4. Exécution", "Tâche": "Logistique village gastronomique & marché créateurs", "Description": "Sélection exposants, contrats stands, plan d'implantation", "Durée (sem.)": 8, "Début (S)": 38, "Fin (S)": 46, "Dépendances": "4.3", "Responsable": "Logistique", "Chemin critique": "Non"}, {"ID": "4.6", "Phase": "4. Exécution", "Tâche": "Accords partenaires médias", "Description": "Diffuseurs, presse, plateformes de streaming", "Durée (sem.)": 8, "Début (S)": 36, "Fin (S)": 44, "Dépendances": "2.5", "Responsable": "Communication", "Chemin critique": "Non"}, {"ID": "5.1", "Phase": "5. Sprint final", "Tâche": "Montage technique du site", "Description": "Scènes, structures, sonorisation, éclairage, stands", "Durée (sem.)": 2, "Début (S)": 50, "Fin (S)": 52, "Dépendances": "4.3;3.2", "Responsable": "Production", "Chemin critique": "Oui"}, {"ID": "5.2", "Phase": "5. Sprint final", "Tâche": "Répétitions générales & briefings", "Description": "Run-through, briefing sécurité et bénévoles", "Durée (sem.)": 1, "Début (S)": 51, "Fin (S)": 52, "Dépendances": "4.4;3.6", "Responsable": "Direction", "Chemin critique": "Oui"}, {"ID": "5.3", "Phase": "5. Sprint final", "Tâche": "Contrôle final billetterie & accréditations", "Description": "Tests des systèmes de contrôle d'accès", "Durée (sem.)": 1, "Début (S)": 51, "Fin (S)": 52, "Dépendances": "3.5", "Responsable": "Billetterie", "Chemin critique": "Non"}, {"ID": "5.4", "Phase": "5. Sprint final", "Tâche": "Derniers ajustements sécurité/secours", "Description": "Validation finale du dispositif avec les autorités", "Durée (sem.)": 1, "Début (S)": 51, "Fin (S)": 52, "Dépendances": "3.6", "Responsable": "Sécurité", "Chemin critique": "Non"}, {"ID": "6.1", "Phase": "6. Événement", "Tâche": "Jour 1 — Découverte", "Description": "Ouverture officielle, expositions, jeunes artistes, DJ sets, concert principal", "Durée (sem.)": 1, "Début (S)": 53, "Fin (S)": 53, "Dépendances": "5.1;5.2", "Responsable": "Direction", "Chemin critique": "Oui"}, {"ID": "6.2", "Phase": "6. Événement", "Tâche": "Jour 2 — Culture & Lifestyle", "Description": "Défilés, street food, tournois, conférences, têtes d'affiche", "Durée (sem.)": 1, "Début (S)": 53, "Fin (S)": 53, "Dépendances": "6.1", "Responsable": "Direction", "Chemin critique": "Oui"}, {"ID": "6.3", "Phase": "6. Événement", "Tâche": "Jour 3 — Grand Final", "Description": "Animations, invités internationaux, concert géant, clôture", "Durée (sem.)": 1, "Début (S)": 53, "Fin (S)": 53, "Dépendances": "6.2", "Responsable": "Direction", "Chemin critique": "Oui"}, {"ID": "7.1", "Phase": "7. Post-événement", "Tâche": "Démontage du site", "Description": "Retrait des installations, remise en état", "Durée (sem.)": 1, "Début (S)": 53, "Fin (S)": 54, "Dépendances": "6.3", "Responsable": "Production", "Chemin critique": "Non"}, {"ID": "7.2", "Phase": "7. Post-événement", "Tâche": "Bilan financier & rapport sponsors", "Description": "Clôture des comptes, rapport d'impact par sponsor", "Durée (sem.)": 2, "Début (S)": 54, "Fin (S)": 56, "Dépendances": "7.1", "Responsable": "Finance / Partenariats", "Chemin critique": "Non"}, {"ID": "7.3", "Phase": "7. Post-événement", "Tâche": "Bilan qualitatif", "Description": "Retours équipes, bénévoles, public, presse", "Durée (sem.)": 2, "Début (S)": 54, "Fin (S)": 56, "Dépendances": "7.1", "Responsable": "Direction", "Chemin critique": "Non"}, {"ID": "7.4", "Phase": "7. Post-événement", "Tâche": "Paiement prestataires & artistes", "Description": "Solde des contrats", "Durée (sem.)": 1, "Début (S)": 54, "Fin (S)": 55, "Dépendances": "7.2", "Responsable": "Finance", "Chemin critique": "Non"}], "critical_path": [{"Ordre": 1, "ID WBS": "1.2", "Tâche critique": "Business plan & budget prévisionnel", "Début (S)": 1, "Fin (S)": 6, "Durée (sem.)": 5, "Marge": 0, "Conséquence d'un retard": "Bloque le choix du site et toute négociation sponsor"}, {"Ordre": 2, "ID WBS": "2.1", "Tâche critique": "Recherche & présélection de sites", "Début (S)": 8, "Fin (S)": 12, "Durée (sem.)": 4, "Marge": 0, "Conséquence d'un retard": "Retarde toute la logistique et les autorisations"}, {"Ordre": 3, "ID WBS": "2.2", "Tâche critique": "Visites de sites & négociation", "Début (S)": 12, "Fin (S)": 16, "Durée (sem.)": 4, "Marge": 0, "Conséquence d'un retard": "Retarde la signature du contrat de site"}, {"Ordre": 4, "ID WBS": "2.3", "Tâche critique": "Signature contrat de location du site", "Début (S)": 16, "Fin (S)": 18, "Durée (sem.)": 2, "Marge": 0, "Conséquence d'un retard": "Bloque le dépôt des autorisations administratives"}, {"Ordre": 5, "ID WBS": "2.4", "Tâche critique": "Autorisations administratives", "Début (S)": 17, "Fin (S)": 24, "Durée (sem.)": 7, "Marge": 0, "Conséquence d'un retard": "Sans autorisation, l'événement ne peut pas se tenir"}, {"Ordre": 6, "ID WBS": "3.3", "Tâche critique": "Signature sponsors principaux", "Début (S)": 24, "Fin (S)": 34, "Durée (sem.)": 10, "Marge": 0, "Conséquence d'un retard": "Conditionne le budget disponible pour la programmation et le marketing"}, {"Ordre": 7, "ID WBS": "3.4", "Tâche critique": "Booking programmation artistique", "Début (S)": 24, "Fin (S)": 34, "Durée (sem.)": 10, "Marge": 0, "Conséquence d'un retard": "Les têtes d'affiche doivent être réservées tôt (agendas internationaux)"}, {"Ordre": 8, "ID WBS": "4.1", "Tâche critique": "Finalisation programmation & contrats artistes", "Début (S)": 34, "Fin (S)": 40, "Durée (sem.)": 6, "Marge": 0, "Conséquence d'un retard": "Sans contrats signés, pas de communication marketing possible sur le line-up"}, {"Ordre": 9, "ID WBS": "4.2", "Tâche critique": "Campagne marketing intensive", "Début (S)": 36, "Fin (S)": 52, "Durée (sem.)": 16, "Marge": 0, "Conséquence d'un retard": "Détermine directement le niveau de vente des billets"}, {"Ordre": 10, "ID WBS": "5.1", "Tâche critique": "Montage technique du site", "Début (S)": 50, "Fin (S)": 52, "Durée (sem.)": 2, "Marge": 0, "Conséquence d'un retard": "Sans montage terminé, l'ouverture au public est impossible"}, {"Ordre": 11, "ID WBS": "5.2", "Tâche critique": "Répétitions générales & briefings", "Début (S)": 51, "Fin (S)": 52, "Durée (sem.)": 1, "Marge": 0, "Conséquence d'un retard": "Sécurité et fluidité du jour J compromises sans répétition"}, {"Ordre": 12, "ID WBS": "6.1", "Tâche critique": "Jour 1 — Découverte", "Début (S)": 53, "Fin (S)": 53, "Durée (sem.)": 1, "Marge": 0, "Conséquence d'un retard": "Point de départ de l'événement"}, {"Ordre": 13, "ID WBS": "6.2", "Tâche critique": "Jour 2 — Culture & Lifestyle", "Début (S)": 53, "Fin (S)": 53, "Durée (sem.)": 1, "Marge": 0, "Conséquence d'un retard": "Enchaînement direct avec le Jour 1"}, {"Ordre": 14, "ID WBS": "6.3", "Tâche critique": "Jour 3 — Grand Final", "Début (S)": 53, "Fin (S)": 53, "Durée (sem.)": 1, "Marge": 0, "Conséquence d'un retard": "Clôture de l'événement"}], "resources": [{"Phase": "1. Fondations", "Période (semaines)": "S1 - S12", "Effectifs clés": "Fondateur, Direction, Finance, Marketing, Juridique (souvent en freelance/conseil à ce stade)", "Effectif approx.": "5 - 10 personnes", "Part indicative du budget": "3 - 5 %", "Équipements / outils": "Outils bureautiques, logiciel de gestion de projet, modèle financier", "Livrables clés de fin de phase": "Structure juridique créée · Business plan validé · Identité de marque définie"}, {"Phase": "2. Ancrage", "Période (semaines)": "S12 - S24", "Effectifs clés": "Production (site), Juridique, Partenariats, Marketing", "Effectif approx.": "10 - 15 personnes", "Part indicative du budget": "8 - 10 % (dont dépôts/acomptes site)", "Équipements / outils": "Cahier des charges site, pitch deck sponsors, logiciel CRM partenaires", "Livrables clés de fin de phase": "Site réservé sous contrat · Dossiers d'autorisation déposés · Premiers sponsors engagés"}, {"Phase": "3. Structuration", "Période (semaines)": "S24 - S36", "Effectifs clés": "Responsables de pôles (sécurité, technique, logistique, com, bénévoles), Direction artistique, RH", "Effectif approx.": "25 - 40 personnes (encadrement)", "Part indicative du budget": "20 - 25 % (acomptes artistes, prestataires)", "Équipements / outils": "Logiciel de billetterie, contrats-types, plan de sécurité", "Livrables clés de fin de phase": "Sponsors principaux signés · Programmation artistique bookée · Billetterie ouverte"}, {"Phase": "4. Exécution", "Période (semaines)": "S36 - S48", "Effectifs clés": "Marketing (agence + interne), Production, RH (bénévoles), Logistique, Communication", "Effectif approx.": "60 - 100 personnes (dont premiers bénévoles formés)", "Part indicative du budget": "30 - 35 % (campagne marketing, logistique stands)", "Équipements / outils": "Outils de diffusion média, plateforme de formation bénévoles, plan de site numérique", "Livrables clés de fin de phase": "Contrats artistes finalisés · Plan de site validé · Bénévoles recrutés"}, {"Phase": "5. Sprint final", "Période (semaines)": "S48 - S52", "Effectifs clés": "Toutes les équipes + prestataires techniques (montage)", "Effectif approx.": "150 - 250 personnes sur site en fin de phase", "Part indicative du budget": "10 - 12 %", "Équipements / outils": "Matériel de montage (scènes, son, lumière), talkies-walkies, badges/accréditations", "Livrables clés de fin de phase": "Site monté et testé · Équipes briefées · Billetterie et sécurité validées"}, {"Phase": "6. Événement (J1-J3)", "Période (semaines)": "S53", "Effectifs clés": "Sécurité, bénévoles, technique, accueil, logistique, nettoyage, secours (effectif complet)", "Effectif approx.": "400 - 800 personnes (staff + bénévoles + prestataires + secours)", "Part indicative du budget": "10 - 12 % (frais J-jour : carburant, restauration staff, imprévus)", "Équipements / outils": "PC sécurité, groupes électrogènes, réseau radio, matériel médical", "Livrables clés de fin de phase": "3 jours exécutés sans incident majeur · Objectifs de fréquentation atteints"}, {"Phase": "7. Post-événement", "Période (semaines)": "S53 - S56", "Effectifs clés": "Production (démontage), Finance, Direction, Partenariats", "Effectif approx.": "15 - 25 personnes", "Part indicative du budget": "2 - 3 %", "Équipements / outils": "Outils de reporting, comptabilité", "Livrables clés de fin de phase": "Site restitué · Bilan financier clôturé · Rapports sponsors envoyés"}], "risks": [{"ID": "R01", "Risque": "Retard de signature du contrat du site", "Catégorie": "Logistique", "Probabilité (1-5)": 3, "Impact (1-5)": 5, "Score": 15, "Niveau": "Critique", "Mitigation": "Lancer la recherche de sites dès la fin du business plan ; garder 2 sites de repli", "Responsable": "Production", "Statut": "Ouvert"}, {"ID": "R02", "Risque": "Refus ou retard des autorisations administratives", "Catégorie": "Réglementaire", "Probabilité (1-5)": 3, "Impact (1-5)": 5, "Score": 15, "Niveau": "Critique", "Mitigation": "Déposer les dossiers au plus tôt ; désigner un interlocuteur dédié aux autorités", "Responsable": "Juridique", "Statut": "Ouvert"}, {"ID": "R03", "Risque": "Désistement d'une tête d'affiche", "Catégorie": "Artistique", "Probabilité (1-5)": 3, "Impact (1-5)": 4, "Score": 12, "Niveau": "Élevé", "Mitigation": "Clause de pénalité contractuelle ; identifier des artistes de remplacement en amont", "Responsable": "Direction artistique", "Statut": "Ouvert"}, {"ID": "R04", "Risque": "Objectif de 20 000 billets non atteint", "Catégorie": "Financier", "Probabilité (1-5)": 3, "Impact (1-5)": 5, "Score": 15, "Niveau": "Critique", "Mitigation": "Tarifs early bird, paliers de prix, campagne marketing étalée sur plusieurs mois", "Responsable": "Marketing", "Statut": "Ouvert"}, {"ID": "R05", "Risque": "Retrait d'un sponsor principal", "Catégorie": "Financier", "Probabilité (1-5)": 2, "Impact (1-5)": 5, "Score": 10, "Niveau": "Élevé", "Mitigation": "Diversifier les sources de sponsoring ; ne pas dépendre d'un seul sponsor > 30 % du budget", "Responsable": "Partenariats", "Statut": "Ouvert"}, {"ID": "R06", "Risque": "Incident sécurité / mouvement de foule", "Catégorie": "Sécurité", "Probabilité (1-5)": 2, "Impact (1-5)": 5, "Score": 10, "Niveau": "Élevé", "Mitigation": "Plan de sécurité validé par les autorités, jauge stricte, postes de secours dimensionnés", "Responsable": "Sécurité", "Statut": "Ouvert"}, {"ID": "R07", "Risque": "Conditions météo défavorables", "Catégorie": "Opérationnel", "Probabilité (1-5)": 4, "Impact (1-5)": 3, "Score": 12, "Niveau": "Élevé", "Mitigation": "Structures couvertes, plan B pour la scène principale, assurance annulation", "Responsable": "Production", "Statut": "Ouvert"}, {"ID": "R08", "Risque": "Panne technique son/lumière/scène", "Catégorie": "Technique", "Probabilité (1-5)": 3, "Impact (1-5)": 3, "Score": 9, "Niveau": "Élevé", "Mitigation": "Matériel redondant, prestataire avec équipe technique sur place en continu", "Responsable": "Production", "Statut": "Ouvert"}, {"ID": "R09", "Risque": "Insuffisance de bénévoles/staff le jour J", "Catégorie": "RH", "Probabilité (1-5)": 3, "Impact (1-5)": 3, "Score": 9, "Niveau": "Élevé", "Mitigation": "Sur-recrutement de 15-20 %, listes d'attente bénévoles, briefings de confirmation", "Responsable": "RH", "Statut": "Ouvert"}, {"ID": "R10", "Risque": "Dépassement budgétaire", "Catégorie": "Financier", "Probabilité (1-5)": 4, "Impact (1-5)": 4, "Score": 16, "Niveau": "Critique", "Mitigation": "Suivi budgétaire hebdomadaire, réserve pour imprévus de 8-10 %", "Responsable": "Finance", "Statut": "Ouvert"}, {"ID": "R11", "Risque": "Coupure électrique / connectivité sur site", "Catégorie": "Technique", "Probabilité (1-5)": 3, "Impact (1-5)": 3, "Score": 9, "Niveau": "Élevé", "Mitigation": "Groupes électrogènes de secours, double alimentation pour billetterie et sécurité", "Responsable": "Technique", "Statut": "Ouvert"}, {"ID": "R12", "Risque": "Fraude ou contrefaçon de billets", "Catégorie": "Sécurité", "Probabilité (1-5)": 2, "Impact (1-5)": 3, "Score": 6, "Niveau": "Modéré", "Mitigation": "Billetterie professionnelle avec contrôle d'accès électronique (QR code unique)", "Responsable": "Billetterie", "Statut": "Ouvert"}, {"ID": "R13", "Risque": "Contexte sécuritaire régional", "Catégorie": "Contexte", "Probabilité (1-5)": 3, "Impact (1-5)": 5, "Score": 15, "Niveau": "Critique", "Mitigation": "Veille sécuritaire continue, coordination avec les autorités, plan de contingence", "Responsable": "Direction / Sécurité", "Statut": "Ouvert"}, {"ID": "R14", "Risque": "Mauvaise coordination inter-équipes", "Catégorie": "Organisationnel", "Probabilité (1-5)": 3, "Impact (1-5)": 3, "Score": 9, "Niveau": "Élevé", "Mitigation": "Comité de pilotage hebdomadaire, outil de gestion de projet partagé", "Responsable": "Direction", "Statut": "Ouvert"}, {"ID": "R15", "Risque": "Problèmes d'hygiène / restauration (village gastronomique)", "Catégorie": "Opérationnel", "Probabilité (1-5)": 2, "Impact (1-5)": 3, "Score": 6, "Niveau": "Modéré", "Mitigation": "Cahier des charges sanitaire pour les exposants, contrôles avant ouverture", "Responsable": "Logistique", "Statut": "Ouvert"}, {"ID": "R16", "Risque": "Retards de paiement aux prestataires", "Catégorie": "Financier", "Probabilité (1-5)": 2, "Impact (1-5)": 3, "Score": 6, "Niveau": "Modéré", "Mitigation": "Échéancier de paiement clair, trésorerie dédiée sécurisée dès la signature des contrats", "Responsable": "Finance", "Statut": "Ouvert"}, {"ID": "R17", "Risque": "Communication de crise mal gérée", "Catégorie": "Réputation", "Probabilité (1-5)": 2, "Impact (1-5)": 4, "Score": 8, "Niveau": "Modéré", "Mitigation": "Cellule de communication de crise identifiée, éléments de langage préparés à l'avance", "Responsable": "Communication", "Statut": "Ouvert"}, {"ID": "R18", "Risque": "Vols ou dégradations sur site", "Catégorie": "Sécurité", "Probabilité (1-5)": 2, "Impact (1-5)": 2, "Score": 4, "Niveau": "Modéré", "Mitigation": "Gardiennage 24h/24 pendant le montage, contrôle des accès, inventaire du matériel", "Responsable": "Sécurité", "Statut": "Ouvert"}], "communication": [{"Partie prenante": "Équipe interne / direction", "Niveau d'influence": "Élevé", "Objectif de communication": "Alignement et prise de décision", "Message clé": "Où en est-on par rapport au plan et au budget ?", "Canal": "Réunion hebdomadaire + outil de gestion partagé", "Fréquence": "Hebdomadaire", "Responsable": "Direction générale"}, {"Partie prenante": "Bénévoles", "Niveau d'influence": "Modéré", "Objectif de communication": "Motivation, formation, sentiment d'appartenance", "Message clé": "Votre rôle est essentiel à la réussite de Wagaland", "Canal": "Groupes WhatsApp, réunions de formation", "Fréquence": "Mensuelle, puis hebdomadaire à J-60", "Responsable": "RH"}, {"Partie prenante": "Sponsors & partenaires financiers", "Niveau d'influence": "Élevé", "Objectif de communication": "Rassurer sur l'avancement, démontrer le retour sur investissement", "Message clé": "Voici votre visibilité et l'impact de votre soutien", "Canal": "Rapports d'étape, réunions dédiées", "Fréquence": "Mensuelle", "Responsable": "Partenariats"}, {"Partie prenante": "Artistes & agents", "Niveau d'influence": "Élevé", "Objectif de communication": "Coordination contractuelle et logistique", "Message clé": "Voici les conditions techniques et le calendrier de votre passage", "Canal": "Email, contrats, fiches techniques", "Fréquence": "Selon les jalons contractuels", "Responsable": "Direction artistique"}, {"Partie prenante": "Autorités locales (mairie, préfecture, sécurité civile)", "Niveau d'influence": "Élevé", "Objectif de communication": "Conformité réglementaire, autorisations", "Message clé": "Wagaland respecte toutes les exigences de sécurité et d'ordre public", "Canal": "Courriers officiels, réunions de coordination", "Fréquence": "Selon calendrier administratif, intensif à J-30", "Responsable": "Juridique / Sécurité"}, {"Partie prenante": "Médias / presse", "Niveau d'influence": "Modéré à élevé", "Objectif de communication": "Couverture médiatique et notoriété", "Message clé": "Wagaland, le grand rendez-vous culturel et musical", "Canal": "Communiqués, conférences de presse, accréditations", "Fréquence": "Mensuelle, intensive le dernier mois", "Responsable": "Communication"}, {"Partie prenante": "Public / festivaliers", "Niveau d'influence": "Élevé (revenus billetterie)", "Objectif de communication": "Mobilisation et vente de billets", "Message clé": "Trois jours de musique, culture et expériences à ne pas manquer", "Canal": "Réseaux sociaux, influenceurs, radio, affichage", "Fréquence": "Continue, intensifiée les 8 dernières semaines", "Responsable": "Marketing"}, {"Partie prenante": "Prestataires techniques", "Niveau d'influence": "Modéré", "Objectif de communication": "Coordination opérationnelle", "Message clé": "Voici le cahier des charges et le calendrier de montage", "Canal": "Réunions techniques, documents partagés", "Fréquence": "Bi-mensuelle, puis hebdomadaire à J-60", "Responsable": "Production"}, {"Partie prenante": "Communauté locale / riverains", "Niveau d'influence": "Modéré", "Objectif de communication": "Acceptabilité et minimisation des nuisances", "Message clé": "Wagaland est un événement organisé et respectueux du voisinage", "Canal": "Réunions publiques, affichage local", "Fréquence": "Ponctuelle (J-90 et J-15)", "Responsable": "Direction"}, {"Partie prenante": "Forces de sécurité et de secours (police, pompiers, croix-rouge)", "Niveau d'influence": "Élevé", "Objectif de communication": "Coordination du dispositif de sécurité", "Message clé": "Voici le plan de sécurité et les points de contact sur site", "Canal": "Réunions de coordination, exercices conjoints", "Fréquence": "Mensuelle, puis hebdomadaire à J-30", "Responsable": "Sécurité"}], "dod": [{"Livrable / Jalon": "Business plan validé", "Critères d'acceptation": "Budget équilibré ou déficit couvert par une réserve identifiée ; hypothèses sourcées ; validé par la direction et un regard externe", "Preuve / Document attendu": "Document de business plan signé", "Validé par": "Direction / Conseil", "Statut": "À faire"}, {"Livrable / Jalon": "Site sécurisé", "Critères d'acceptation": "Contrat signé ; capacité confirmée ≥ 15 000 personnes ; accès véhicules et secours validés", "Preuve / Document attendu": "Contrat de location + plan du site", "Validé par": "Direction Production", "Statut": "À faire"}, {"Livrable / Jalon": "Autorisations administratives obtenues", "Critères d'acceptation": "Toutes les autorisations requises obtenues (préfecture, sécurité civile, droits d'auteur, débit de boissons) et disponibles sur site", "Preuve / Document attendu": "Copies des autorisations officielles", "Validé par": "Juridique", "Statut": "À faire"}, {"Livrable / Jalon": "Programmation artistique finalisée", "Critères d'acceptation": "100 % des artistes sous contrat signé ; riders techniques reçus ; planning de passage validé", "Preuve / Document attendu": "Contrats + planning de scène", "Validé par": "Direction artistique", "Statut": "À faire"}, {"Livrable / Jalon": "Billetterie opérationnelle", "Critères d'acceptation": "Système testé en conditions réelles ; contrôle d'accès fonctionnel ; staff formé", "Preuve / Document attendu": "Rapport de test de charge", "Validé par": "Responsable billetterie", "Statut": "À faire"}, {"Livrable / Jalon": "Sponsors signés", "Critères d'acceptation": "Contrats signés couvrant la part de budget prévue au business plan ; contreparties définies par écrit", "Preuve / Document attendu": "Contrats de sponsoring", "Validé par": "Direction / Partenariats", "Statut": "À faire"}, {"Livrable / Jalon": "Plan de sécurité validé", "Critères d'acceptation": "Validé par les autorités compétentes ; effectifs confirmés ; poste de secours opérationnel ; plan d'évacuation testé", "Preuve / Document attendu": "Validation officielle écrite", "Validé par": "Responsable sécurité", "Statut": "À faire"}, {"Livrable / Jalon": "Site prêt pour ouverture", "Critères d'acceptation": "Montage terminé ; tests son/lumière concluants ; signalétique en place ; accessibilité PMR vérifiée", "Preuve / Document attendu": "Check-list de visite de site signée", "Validé par": "Direction Production", "Statut": "À faire"}, {"Livrable / Jalon": "Équipes formées et briefées", "Critères d'acceptation": "100 % des bénévoles et du staff briefés ; rôles assignés ; kits/équipements distribués", "Preuve / Document attendu": "Feuilles de présence aux briefings", "Validé par": "RH", "Statut": "À faire"}, {"Livrable / Jalon": "Clôture de l'événement", "Critères d'acceptation": "Démontage effectué ; site restitué dans l'état contractuel ; aucun incident de sécurité majeur non traité", "Preuve / Document attendu": "Rapport de clôture", "Validé par": "Direction", "Statut": "À faire"}, {"Livrable / Jalon": "Bilan financier & rapport sponsors livré", "Critères d'acceptation": "Comptes clôturés ; rapport d'impact envoyé à chaque sponsor sous 30 jours après l'événement", "Preuve / Document attendu": "Rapport financier final + rapports sponsors", "Validé par": "Finance / Partenariats", "Statut": "À faire"}]}</script>
+<script>
+const DATA = JSON.parse(document.getElementById('wagaland-data').textContent);
+
+const PHASE_COLORS = {
+  "Cadrage": "#5B6178",
+  "1. Fondations": "#8B6FE0",
+  "2. Ancrage": "#2FA89A",
+  "3. Structuration": "#F2B441",
+  "4. Exécution": "#E2652F",
+  "5. Sprint final": "#DA3B33",
+  "6. Événement": "#FFD24C",
+  "7. Post-événement": "#6B7280"
+};
+const PHASE_ORDER = Object.keys(PHASE_COLORS);
+
+const RISK_COLORS = { "Critique":"#DA3B33", "Élevé":"#E2652F", "Modéré":"#F2B441", "Faible":"#2FA89A" };
+const INFLUENCE_COLORS = {
+  "Élevé":"#DA3B33", "Élevé (revenus billetterie)":"#DA3B33",
+  "Modéré à élevé":"#E2652F", "Modéré":"#F2B441"
+};
+
+function el(tag, cls, html){
+  const e = document.createElement(tag);
+  if(cls) e.className = cls;
+  if(html !== undefined) e.innerHTML = html;
+  return e;
+}
+function esc(s){
+  if(s===null||s===undefined) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ---------------- Stat strip ---------------- */
+function buildStats(){
+  const strip = document.getElementById('statStrip');
+  const criticalRisks = DATA.risks.filter(r => r['Niveau'] === 'Critique').length;
+  const criticalTasks = DATA.wbs.filter(r => r['Chemin critique'] === 'Oui').length;
+  const stats = [
+    {n:'56', l:'Semaines au total', a:''},
+    {n:String(DATA.resources.length), l:'Phases du projet', a:''},
+    {n:String(DATA.wbs.length), l:'Tâches (WBS)', a:''},
+    {n:String(criticalTasks), l:'Tâches critiques', a:'accent-gold'},
+    {n:String(DATA.risks.length), l:'Risques suivis', a:''},
+    {n:String(criticalRisks), l:'Risques critiques', a:'accent-red'},
+  ];
+  stats.forEach(s=>{
+    const d = el('div','stat '+s.a);
+    d.innerHTML = `<span class="n">${s.n}</span><span class="l">${s.l}</span>`;
+    strip.appendChild(d);
+  });
+}
+
+/* ---------------- Tabs ---------------- */
+const TABS = [
+  {id:'overview', label:'Vue d\'ensemble'},
+  {id:'wbs', label:'WBS & Calendrier'},
+  {id:'critical', label:'Chemin critique'},
+  {id:'resources', label:'Ressources'},
+  {id:'risks', label:'Risques'},
+  {id:'comm', label:'Communication'},
+  {id:'dod', label:'Definition of Done'},
+];
+
+function buildTabs(){
+  const bar = document.getElementById('tabbar');
+  TABS.forEach((t, i)=>{
+    const b = el('button','tab'+(i===0?' active':''), `<span class="num">0${i+1}</span>${t.label}`);
+    b.dataset.tab = t.id;
+    b.addEventListener('click', ()=> activateTab(t.id));
+    bar.appendChild(b);
+  });
+}
+function activateTab(id){
+  document.querySelectorAll('.tab').forEach(b=> b.classList.toggle('active', b.dataset.tab===id));
+  document.querySelectorAll('.panel').forEach(p=> p.classList.toggle('active', p.id==='panel-'+id));
+  window.scrollTo({top: document.getElementById('main').offsetTop - 60, behavior:'smooth'});
+}
+
+/* ---------------- Timeline (signature element) ---------------- */
+function buildTimeline(container){
+  const totalWeeks = 56;
+  const card = el('div','timeline-card');
+  card.innerHTML = `<h3><span>Frise des 7 phases — S1 → S56</span><span class="timeline-legend"><span class="dot"></span>tâche du chemin critique</span></h3>`;
+
+  const track = el('div','timeline-track');
+  DATA.resources.forEach(r=>{
+    const phaseTasks = DATA.wbs.filter(w => w.Phase === r.Phase);
+    if(!phaseTasks.length) return;
+    const start = Math.min(...phaseTasks.map(w=>w['Début (S)']));
+    const end = Math.max(...phaseTasks.map(w=>w['Fin (S)']));
+    const widthPct = ((end-start+1)/totalWeeks)*100;
+    const seg = el('div','timeline-seg', `<span>${esc(r.Phase.replace(/^[0-9]+\.\s*/,''))} · S${start}-S${end}</span>`);
+    seg.style.width = widthPct+'%';
+    seg.style.background = PHASE_COLORS[r.Phase] || '#666';
+    seg.title = `${r.Phase} — semaines ${start} à ${end}`;
+    track.appendChild(seg);
+  });
+  card.appendChild(track);
+
+  const ticks = el('div','timeline-ticks');
+  DATA.critical_path.forEach(c=>{
+    const pos = ((c['Début (S)']-1)/totalWeeks)*100;
+    const t = el('div','tick');
+    t.style.left = pos+'%';
+    t.title = `${c['ID WBS']} — ${c['Tâche critique']} (S${c['Début (S)']}-S${c['Fin (S)']})`;
+    ticks.appendChild(t);
+  });
+  card.appendChild(ticks);
+
+  const axis = el('div','timeline-axis');
+  [1,7,14,21,28,35,42,49,56].forEach(w=>{
+    axis.appendChild(el('span', null, 'S'+w));
+  });
+  card.appendChild(axis);
+
+  container.appendChild(card);
+}
+
+/* ---------------- Overview panel ---------------- */
+function buildOverview(){
+  const p = el('div','panel active'); p.id = 'panel-overview';
+  p.appendChild(el('div','section-head','<h2>Vue d\'ensemble</h2><p>La trajectoire complète du projet, phase par phase, avec le chemin critique en surimpression.</p>'));
+  buildTimeline(p);
+
+  const grid = el('div','grid-cards');
+
+  // Phase legend card
+  const legendCard = el('div','card');
+  legendCard.style.gridColumn = 'span 1';
+  let legendHtml = '<div class="card-top"><h4>Légende des phases</h4></div><div class="meta" style="flex-direction:column;align-items:flex-start;gap:9px;">';
+  DATA.resources.forEach(r=>{
+    legendHtml += `<span class="phase-tag"><span class="sw" style="background:${PHASE_COLORS[r.Phase]||'#666'}"></span>${esc(r.Phase)} <span style="color:var(--text-dim)">— ${esc(r['Période (semaines)'])}</span></span>`;
+  });
+  legendHtml += '</div>';
+  legendCard.innerHTML = legendHtml;
+  grid.appendChild(legendCard);
+
+  // Risk level summary
+  const riskCard = el('div','card');
+  const riskCounts = {};
+  DATA.risks.forEach(r=> riskCounts[r.Niveau] = (riskCounts[r.Niveau]||0)+1);
+  let riskHtml = '<div class="card-top"><h4>Registre des risques — répartition</h4></div><div class="meta" style="flex-direction:column;align-items:flex-start;gap:9px;">';
+  ['Critique','Élevé','Modéré','Faible'].forEach(lvl=>{
+    if(!riskCounts[lvl]) return;
+    riskHtml += `<span class="phase-tag"><span class="sw" style="background:${RISK_COLORS[lvl]}"></span>${lvl} <span style="color:var(--text-dim)">— ${riskCounts[lvl]} risque(s)</span></span>`;
+  });
+  riskHtml += '</div>';
+  riskCard.innerHTML = riskHtml;
+  grid.appendChild(riskCard);
+
+  // DoD status summary
+  const dodCard = el('div','card');
+  const dodCounts = {};
+  DATA.dod.forEach(r=> dodCounts[r.Statut] = (dodCounts[r.Statut]||0)+1);
+  let dodHtml = '<div class="card-top"><h4>Definition of Done — statut</h4></div><div class="meta" style="flex-direction:column;align-items:flex-start;gap:9px;">';
+  Object.entries(dodCounts).forEach(([k,v])=>{
+    dodHtml += `<span class="phase-tag"><span class="sw" style="background:var(--slate)"></span>${esc(k)} <span style="color:var(--text-dim)">— ${v} jalon(x)</span></span>`;
+  });
+  dodHtml += `<span style="color:var(--text-dim);font-size:11.5px;margin-top:4px;">${DATA.dod.length} jalons majeurs au total</span>`;
+  dodHtml += '</div>';
+  dodCard.innerHTML = dodHtml;
+  grid.appendChild(dodCard);
+
+  p.appendChild(grid);
+  return p;
+}
+
+/* ---------------- WBS panel ---------------- */
+function buildWBS(){
+  const p = el('div','panel'); p.id = 'panel-wbs';
+  p.appendChild(el('div','section-head','<h2>WBS — Structure de décomposition du travail</h2><p>'+DATA.wbs.length+' tâches réparties sur les 7 phases. Filtrez par phase ou recherchez une tâche.</p>'));
+
+  const chips = el('div','chips');
+  const allChip = el('div','chip active','Toutes les phases');
+  allChip.dataset.phase = '__all__';
+  chips.appendChild(allChip);
+  DATA.resources.forEach(r=>{
+    const c = el('div','chip', esc(r.Phase));
+    c.dataset.phase = r.Phase;
+    chips.appendChild(c);
+  });
+  p.appendChild(chips);
+
+  const searchRow = el('div','search-row');
+  const search = el('input','search-box');
+  search.type = 'text';
+  search.placeholder = 'Rechercher une tâche, un responsable, une dépendance…';
+  searchRow.appendChild(search);
+  p.appendChild(searchRow);
+
+  const tableWrap = el('div','table-wrap');
+  const table = el('table');
+  table.innerHTML = `<thead><tr>
+    <th>ID</th><th>Phase</th><th>Tâche</th><th>Durée</th><th>Semaines</th><th>Dépend.</th><th>Responsable</th><th>Critique</th>
+  </tr></thead><tbody></tbody>`;
+  tableWrap.appendChild(table);
+  p.appendChild(tableWrap);
+
+  let activePhase = '__all__';
+  function render(){
+    const q = search.value.trim().toLowerCase();
+    const tbody = table.querySelector('tbody');
+    tbody.innerHTML = '';
+    DATA.wbs
+      .filter(r => activePhase === '__all__' || r.Phase === activePhase)
+      .filter(r => !q || [r['Tâche'], r['Description'], r['Responsable'], r['Dépendances']].join(' ').toLowerCase().includes(q))
+      .forEach(r=>{
+        const tr = el('tr');
+        tr.innerHTML = `
+          <td class="id-col" data-label="ID">${esc(r.ID)}</td>
+          <td data-label="Phase"><span class="phase-tag"><span class="sw" style="background:${PHASE_COLORS[r.Phase]||'#666'}"></span>${esc(r.Phase)}</span></td>
+          <td class="strong" data-label="Tâche">${esc(r['Tâche'])}<div style="color:var(--text-dim);font-weight:400;font-size:11.5px;margin-top:3px;">${esc(r['Description'])}</div></td>
+          <td data-label="Durée">${esc(r['Durée (sem.)'])} sem.</td>
+          <td class="mono" data-label="Semaines">S${esc(r['Début (S)'])}–S${esc(r['Fin (S)'])}</td>
+          <td class="mono" data-label="Dépend.">${esc(r['Dépendances'])}</td>
+          <td data-label="Responsable">${esc(r['Responsable'])}</td>
+          <td data-label="Critique">${r['Chemin critique']==='Oui' ? '<span class="crit-yes">● OUI</span>' : '<span class="crit-no">— non</span>'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+  }
+  chips.querySelectorAll('.chip').forEach(c=>{
+    c.addEventListener('click', ()=>{
+      chips.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+      c.classList.add('active');
+      activePhase = c.dataset.phase;
+      render();
+    });
+  });
+  search.addEventListener('input', render);
+  render();
+  return p;
+}
+
+/* ---------------- Critical path panel ---------------- */
+function buildCritical(){
+  const p = el('div','panel'); p.id = 'panel-critical';
+  p.appendChild(el('div','section-head','<h2>Chemin critique</h2><p>La séquence de '+DATA.critical_path.length+' tâches qui fixe la durée minimale du projet — 53 semaines jusqu\'à la fin du Jour 3. Tout retard ici décale directement l\'événement.</p>'));
+
+  const wrap = el('div');
+  wrap.style.position = 'relative';
+  wrap.style.paddingLeft = '28px';
+  wrap.style.borderLeft = '2px solid var(--border)';
+  wrap.style.display = 'flex';
+  wrap.style.flexDirection = 'column';
+  wrap.style.gap = '14px';
+
+  DATA.critical_path.forEach(c=>{
+    const row = el('div','card');
+    row.style.position = 'relative';
+    row.style.marginLeft = '0';
+    const dot = document.createElement('div');
+    dot.style.cssText = 'position:absolute;left:-35px;top:22px;width:12px;height:12px;border-radius:50%;background:var(--red);border:2px solid var(--void);box-shadow:0 0 0 2px var(--red);';
+    row.appendChild(dot);
+    row.innerHTML += `
+      <div class="card-top">
+        <h4><span class="mono" style="color:var(--text-dim);margin-right:8px;">#${c['Ordre']} · ${esc(c['ID WBS'])}</span>${esc(c['Tâche critique'])}</h4>
+        <span class="badge badge-dot" style="background:rgba(218,59,51,0.12);color:var(--red);border-color:rgba(218,59,51,0.35);">S${c['Début (S)']}–S${c['Fin (S)']}</span>
+      </div>
+      <div class="meta"><span><b>${c['Durée (sem.)']}</b> semaine(s)</span><span>Marge : <b>${c['Marge']}</b></span></div>
+      <p class="desc">⚠ ${esc(c["Conséquence d'un retard"])}</p>
+    `;
+    wrap.appendChild(row);
+  });
+  p.appendChild(wrap);
+  return p;
+}
+
+/* ---------------- Resources panel ---------------- */
+function buildResources(){
+  const p = el('div','panel'); p.id = 'panel-resources';
+  p.appendChild(el('div','section-head','<h2>Ressources par phase</h2><p>Effectifs, budget indicatif et livrables clés pour chacune des '+DATA.resources.length+' phases.</p>'));
+
+  const grid = el('div','grid-cards');
+  DATA.resources.forEach(r=>{
+    const c = el('div','card');
+    c.style.borderTop = `3px solid ${PHASE_COLORS[r.Phase]||'#666'}`;
+    c.innerHTML = `
+      <div class="card-top"><h4>${esc(r.Phase)}</h4><span class="badge" style="background:var(--surface-2);color:var(--text-muted);border-color:var(--border);">${esc(r['Période (semaines)'])}</span></div>
+      <div class="meta">
+        <span>Effectif : <b>${esc(r['Effectif approx.'])}</b></span>
+        <span>Budget : <b>${esc(r['Part indicative du budget'])}</b></span>
+      </div>
+      <p class="desc"><b style="color:var(--text)">Équipes clés —</b> ${esc(r['Effectifs clés'])}</p>
+      <p class="desc"><b style="color:var(--text)">Outils —</b> ${esc(r['Équipements / outils'])}</p>
+      <p class="desc"><b style="color:var(--text)">Livrables de fin de phase —</b> ${esc(r['Livrables clés de fin de phase'])}</p>
+    `;
+    grid.appendChild(c);
+  });
+  p.appendChild(grid);
+  return p;
+}
+
+/* ---------------- Risks panel ---------------- */
+function buildRisks(){
+  const p = el('div','panel'); p.id = 'panel-risks';
+  p.appendChild(el('div','section-head','<h2>Registre des risques</h2><p>Score = Probabilité × Impact. '+DATA.risks.length+' risques suivis, positionnés sur la matrice ci-dessous.</p>'));
+
+  // Matrix: rows = impact 5..1 (top=high impact), cols = probability 1..5
+  const mWrap = el('div','matrix-wrap');
+  const grid = el('div','matrix-grid');
+  grid.appendChild(el('div','mx-corner'));
+  for(let prob=1; prob<=5; prob++){
+    grid.appendChild(el('div','mx-axis-label', 'Prob. '+prob));
+  }
+  for(let impact=5; impact>=1; impact--){
+    grid.appendChild(el('div','mx-y-label', 'Impact '+impact));
+    for(let prob=1; prob<=5; prob++){
+      const cell = el('div','mx-cell');
+      const score = prob*impact;
+      let level = score>=15?'Critique':score>=9?'Élevé':score>=4?'Modéré':'Faible';
+      cell.style.background = RISK_COLORS[level]+'1c';
+      cell.style.borderColor = RISK_COLORS[level]+'55';
+      const matches = DATA.risks.filter(r=>r['Probabilité (1-5)']===prob && r['Impact (1-5)']===impact);
+      matches.forEach(r=>{
+        const chip = el('div','mx-chip', esc(r.ID));
+        chip.style.background = RISK_COLORS[r.Niveau];
+        chip.title = r.Risque+' — '+r.Niveau+' ('+r.Score+')';
+        cell.appendChild(chip);
+      });
+      grid.appendChild(cell);
+    }
+  }
+  mWrap.appendChild(grid);
+  p.appendChild(mWrap);
+
+  const searchRow = el('div','search-row');
+  const search = el('input','search-box');
+  search.type='text'; search.placeholder='Rechercher un risque, une catégorie, un responsable…';
+  searchRow.appendChild(search);
+  p.appendChild(searchRow);
+
+  const tableWrap = el('div','table-wrap');
+  const table = el('table');
+  table.innerHTML = `<thead><tr>
+    <th>ID</th><th>Risque</th><th>Catégorie</th><th>Prob.</th><th>Impact</th><th>Score</th><th>Niveau</th><th>Mitigation</th><th>Responsable</th>
+  </tr></thead><tbody></tbody>`;
+  tableWrap.appendChild(table);
+  p.appendChild(tableWrap);
+
+  function render(){
+    const q = search.value.trim().toLowerCase();
+    const tbody = table.querySelector('tbody');
+    tbody.innerHTML = '';
+    DATA.risks
+      .filter(r => !q || [r.Risque, r['Catégorie'], r.Responsable, r.Mitigation].join(' ').toLowerCase().includes(q))
+      .sort((a,b)=> b.Score - a.Score)
+      .forEach(r=>{
+        const tr = el('tr');
+        tr.innerHTML = `
+          <td class="id-col" data-label="ID">${esc(r.ID)}</td>
+          <td class="strong" data-label="Risque">${esc(r.Risque)}</td>
+          <td data-label="Catégorie">${esc(r['Catégorie'])}</td>
+          <td class="mono" data-label="Prob.">${esc(r['Probabilité (1-5)'])}</td>
+          <td class="mono" data-label="Impact">${esc(r['Impact (1-5)'])}</td>
+          <td class="mono strong" data-label="Score">${esc(r.Score)}</td>
+          <td data-label="Niveau"><span class="badge badge-dot" style="background:${RISK_COLORS[r.Niveau]}1c;color:${RISK_COLORS[r.Niveau]};border-color:${RISK_COLORS[r.Niveau]}55;">${esc(r.Niveau)}</span></td>
+          <td data-label="Mitigation" style="min-width:0;">${esc(r.Mitigation)}</td>
+          <td data-label="Responsable">${esc(r.Responsable)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+  }
+  search.addEventListener('input', render);
+  render();
+  return p;
+}
+
+/* ---------------- Communication panel ---------------- */
+function buildComm(){
+  const p = el('div','panel'); p.id = 'panel-comm';
+  p.appendChild(el('div','section-head','<h2>Plan de communication</h2><p>'+DATA.communication.length+' parties prenantes, leur message clé, canal et fréquence.</p>'));
+
+  const grid = el('div','grid-cards');
+  DATA.communication.forEach(r=>{
+    const infl = r["Niveau d'influence"];
+    const color = INFLUENCE_COLORS[infl] || 'var(--slate)';
+    const c = el('div','card');
+    c.innerHTML = `
+      <div class="card-top">
+        <h4>${esc(r['Partie prenante'])}</h4>
+        <span class="badge badge-dot" style="background:${color}1c;color:${color};border-color:${color}55;">${esc(infl)}</span>
+      </div>
+      <p class="desc"><b style="color:var(--text)">Objectif —</b> ${esc(r['Objectif de communication'])}</p>
+      <p class="desc"><b style="color:var(--text)">Message clé —</b> « ${esc(r['Message clé'])} »</p>
+      <div class="meta" style="margin-top:12px;">
+        <span>Canal : <b>${esc(r.Canal)}</b></span>
+        <span>Fréquence : <b>${esc(r['Fréquence'])}</b></span>
+        <span>Responsable : <b>${esc(r['Responsable'])}</b></span>
+      </div>
+    `;
+    grid.appendChild(c);
+  });
+  p.appendChild(grid);
+  return p;
+}
+
+/* ---------------- Definition of Done panel ---------------- */
+function buildDoD(){
+  const p = el('div','panel'); p.id = 'panel-dod';
+  p.appendChild(el('div','section-head','<h2>Definition of Done</h2><p>Critères d\'acceptation pour chacun des '+DATA.dod.length+' grands jalons du projet.</p>'));
+
+  const grid = el('div','grid-cards');
+  DATA.dod.forEach(r=>{
+    const c = el('div','card');
+    c.innerHTML = `
+      <div class="card-top">
+        <h4>${esc(r['Livrable / Jalon'])}</h4>
+        <span class="badge" style="background:var(--surface-2);color:var(--text-muted);border-color:var(--border);">${esc(r.Statut)}</span>
+      </div>
+      <p class="desc"><b style="color:var(--text)">Critères d'acceptation —</b> ${esc(r["Critères d'acceptation"])}</p>
+      <div class="meta" style="margin-top:12px;">
+        <span>Preuve : <b>${esc(r['Preuve / Document attendu'])}</b></span>
+        <span>Validé par : <b>${esc(r['Validé par'])}</b></span>
+      </div>
+    `;
+    grid.appendChild(c);
+  });
+  p.appendChild(grid);
+  return p;
+}
+
+/* ---------------- Boot ---------------- */
+function boot(){
+  buildStats();
+  buildTabs();
+  const main = document.getElementById('main');
+  main.appendChild(buildOverview());
+  main.appendChild(buildWBS());
+  main.appendChild(buildCritical());
+  main.appendChild(buildResources());
+  main.appendChild(buildRisks());
+  main.appendChild(buildComm());
+  main.appendChild(buildDoD());
+  document.getElementById('genMeta').textContent = DATA.wbs.length+' tâches · '+DATA.risks.length+' risques · '+DATA.communication.length+' parties prenantes';
+}
+boot();
+</script>
+</body>
+</html>
